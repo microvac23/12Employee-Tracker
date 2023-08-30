@@ -1,7 +1,7 @@
 const mySql = require('mysql2')
 const inquirer = require('inquirer')
 
-/* const dbConnection = mySql.createConnection(
+const dbConnection = mySql.createConnection(
     {
         host: 'localhost',
         user: 'root',
@@ -9,7 +9,11 @@ const inquirer = require('inquirer')
         database: 'business_db'
     },
     console.log('Successfully connected!')
-); */
+);
+
+dbConnection.connect((err) => {
+    err ? console.log(err) : CLI()
+})
 
 const CLI = () => inquirer.prompt([
     {
@@ -62,11 +66,13 @@ const addDepartment = () => inquirer.prompt([
         message: 'What is the name of your new department?',
         name: 'department'
     }
-
 ])
 .then(response => {
-    console.log(`New department, ${response.department}, has been added!`)
-    CLI()
+    dbConnection.query(`INSERT INTO department (name) VALUES (?)`, [response.department], (err, res) => {
+        err ? console.log(err) : console.log(`New department, ${response.department}, has been added!`)
+        CLI()
+    }
+    )
 });
 
 const addEmployee = () => inquirer.prompt([
@@ -103,22 +109,37 @@ const addRole = () => inquirer.prompt([
 const viewDepartments = () => inquirer.prompt([
 ])
 .then(response => {
-    console.log(`All departments are listed below...`)
-    CLI()
+    db.query('SELECT * FROM department', (err, res) => {
+        err 
+        ? console.log(err) 
+        : console.log(`All departments are listed below...`),
+        console.table(res),
+        CLI()
+        })
 });
 
 const viewEmployees = () => inquirer.prompt([
 ])
 .then(response => {
-    console.log(`All employees are listed below...`)
+    db.query('SELECT * FROM role', (err, res) => {
+    err 
+    ? console.log(err) 
+    : console.log(`All employees are listed below...`),
+    console.table(res),
     CLI()
+    })
 });
 
 const viewRoles = () => inquirer.prompt([
 ])
 .then(response => {
-    console.log(`All roles are listed below...`)
-    CLI()
+    db.query('SELECT * FROM role', (err, res) => {
+        err 
+        ? console.log(err) 
+        : console.log(`All roles are listed below...`),
+        console.table(res),
+        CLI()
+        })
 });
 
 const updateEmployee = () => inquirer.prompt([
