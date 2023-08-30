@@ -1,7 +1,7 @@
 const mySql = require('mysql2')
 const inquirer = require('inquirer')
 
-/* const dbConnection = mySql.createConnection(
+const dbConnection = mySql.createConnection(
     {
         host: 'localhost',
         user: 'root',
@@ -9,7 +9,10 @@ const inquirer = require('inquirer')
         database: 'business_db'
     },
     console.log('Successfully connected!')
-); */
+);
+dbConnection.connect((err) => {
+    err ? console.log(err) : CLI()
+})
 
 const CLI = () => inquirer.prompt([
     {
