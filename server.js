@@ -7,9 +7,10 @@ const dbConnection = mySql.createConnection(
         user: 'root',
         password: 'starcraft',
         database: 'business_db'
-    },
+   },
     console.log('Successfully connected!')
 );
+
 dbConnection.connect((err) => {
     err ? console.log(err) : CLI()
 })
@@ -58,18 +59,19 @@ const CLI = () => inquirer.prompt([
     }
 });
 
-
 const addDepartment = () => inquirer.prompt([
     {
         type: 'input',
         message: 'What is the name of your new department?',
         name: 'department'
     }
-
 ])
 .then(response => {
-    console.log(`New department, ${response.department}, has been added!`)
-    CLI()
+    dbConnection.query(`INSERT INTO department (name) VALUES (?)`, [response.department], (err, res) => {
+        err ? console.log(err) : console.log(`New department, ${response.department}, has been added!`)
+        CLI()
+    }
+    )
 });
 
 const addEmployee = () => inquirer.prompt([
@@ -106,23 +108,38 @@ const addRole = () => inquirer.prompt([
 const viewDepartments = () => inquirer.prompt([
 ])
 .then(response => {
-    console.log(`All departments are listed below...`)
-    CLI()
+    dbConnection.query('SELECT * FROM department', (err, res) => {
+        err 
+        ? console.log(err) 
+        : console.log(`\nAll departments are listed below...`),
+        console.table(res),
+        CLI()
+        })
 });
 
 const viewEmployees = () => inquirer.prompt([
 ])
 .then(response => {
-    console.log(`All employees are listed below...`)
+    dbConnection.query('SELECT * FROM employee', (err, res) => {
+    err 
+    ? console.log(err) 
+    : console.log(`\nAll employees are listed below...`),
+    console.table(res),
     CLI()
+    })
 });
 
 const viewRoles = () => inquirer.prompt([
 ])
 .then(response => {
-    console.log(`All roles are listed below...`)
-    CLI()
-});
+    dbConnection.query('SELECT * FROM role', (err, res) => {
+        err 
+        ? console.log(err) 
+        : console.log(`\nAll roles are listed below...`),
+        console.table(res),
+        CLI()
+    })
+})
 
 const updateEmployee = () => inquirer.prompt([
     {
@@ -136,7 +153,3 @@ const updateEmployee = () => inquirer.prompt([
     console.log(`Employee has been assigned this new role!`)
     CLI()
 });
-
-
-
-CLI()
