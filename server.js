@@ -9,11 +9,7 @@ const dbConnection = mySql.createConnection(
         database: 'business_db'
    },
     console.log('Successfully connected!')
-);
-
-dbConnection.connect((err) => {
-    err ? console.log(err) : CLI()
-})
+); */
 
 const CLI = () => inquirer.prompt([
     {
