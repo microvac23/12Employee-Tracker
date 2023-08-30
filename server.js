@@ -9,7 +9,11 @@ const dbConnection = mySql.createConnection(
         database: 'business_db'
    },
     console.log('Successfully connected!')
-); */
+);
+
+dbConnection.connect((err) => {
+    err ? console.log(err) : CLI()
+})
 
 const CLI = () => inquirer.prompt([
     {
@@ -66,8 +70,7 @@ const addDepartment = () => inquirer.prompt([
     dbConnection.query(`INSERT INTO department (name) VALUES (?)`, [response.department], (err, res) => {
         err ? console.log(err) : console.log(`New department, ${response.department}, has been added!`)
         CLI()
-    }
-    )
+    })
 });
 
 const addEmployee = () => inquirer.prompt([
@@ -81,11 +84,12 @@ const addEmployee = () => inquirer.prompt([
         message: 'What is the last name of this new employee?',
         name: 'last'
     }
-
 ])
 .then(response => {
-    console.log(`New employee, ${response.first} ${response.last}, has been added!`)
-    CLI()
+    dbConnection.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`, [response.first, response.last, 1, 1], (err, res) => {
+        err ? console.log(err) : console.log(`New department, ${response.department}, has been added!`)
+        CLI()
+    })
 });
 
 const addRole = () => inquirer.prompt([
@@ -93,12 +97,25 @@ const addRole = () => inquirer.prompt([
         type: 'input',
         message: 'What is the name of this new role?',
         name: 'role'
+    },
+    {
+        type: 'input',
+        message: 'What is the yearly of this new role? (in whole numbers)',
+        name: 'salary'
+    },
+    {
+        type: 'list',
+        message: 'Which department is this role under?',
+        name: 'department',
+        choices: ["1", "2", "3"]
     }
 
 ])
 .then(response => {
-    console.log(`New role, ${response.role}, has been added!`)
-    CLI()
+    dbConnection.query(`INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)`, [response.role, response.salary, response.department], (err, res) => {
+        err ? console.log(err) : console.log(`\nNew role, ${response.role}, has been added to department ${response.department}!`)
+        CLI()
+    })
 });
 
 const viewDepartments = () => inquirer.prompt([
@@ -108,7 +125,7 @@ const viewDepartments = () => inquirer.prompt([
         err 
         ? console.log(err) 
         : console.log(`\nAll departments are listed below...`),
-        console.table(res),
+        console.table(res)
         CLI()
         })
 });
