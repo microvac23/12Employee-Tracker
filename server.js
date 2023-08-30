@@ -1,6 +1,7 @@
 const mySql = require('mysql2')
 const inquirer = require('inquirer')
 
+//SQL make connection, add your own host, root, and password
 const dbConnection = mySql.createConnection(
     {
         host: 'localhost',
@@ -11,10 +12,12 @@ const dbConnection = mySql.createConnection(
     console.log('Successfully connected!')
 );
 
+//SQL database connection and main screen CLI
 dbConnection.connect((err) => {
     err ? console.log(err) : CLI()
 })
 
+//All routes return to the main CLI besides "Quit Menu"
 const CLI = () => inquirer.prompt([
     {
         type: 'list',
@@ -59,6 +62,7 @@ const CLI = () => inquirer.prompt([
     }
 });
 
+//Adds department to database
 const addDepartment = () => inquirer.prompt([
     {
         type: 'input',
@@ -68,11 +72,12 @@ const addDepartment = () => inquirer.prompt([
 ])
 .then(response => {
     dbConnection.query(`INSERT INTO department (name) VALUES (?)`, [response.department], (err, res) => {
-        err ? console.log(err) : console.log(`New department, ${response.department}, has been added!`)
+        err ? console.log(err) : console.log(`\nNew department, ${response.department}, has been added!`)
         CLI()
     })
 });
 
+//Adds employees to database
 const addEmployee = () => inquirer.prompt([
     {
         type: 'input',
@@ -87,11 +92,12 @@ const addEmployee = () => inquirer.prompt([
 ])
 .then(response => {
     dbConnection.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`, [response.first, response.last, 1, 1], (err, res) => {
-        err ? console.log(err) : console.log(`New department, ${response.department}, has been added!`)
+        err ? console.log(err) : console.log(`\nNew department, ${response.department}, has been added!`)
         CLI()
     })
 });
 
+//Adds roles to database
 const addRole = () => inquirer.prompt([
     {
         type: 'input',
@@ -113,11 +119,12 @@ const addRole = () => inquirer.prompt([
 ])
 .then(response => {
     dbConnection.query(`INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)`, [response.role, response.salary, response.department], (err, res) => {
-        err ? console.log(err) : console.log(`\nNew role, ${response.role}, has been added to department ${response.department}!`)
+        err ? console.log(err) : console.log(`\nNew role, ${response.role}, has been added!`)
         CLI()
     })
 });
 
+//Get all departments
 const viewDepartments = () => inquirer.prompt([
 ])
 .then(response => {
@@ -130,6 +137,7 @@ const viewDepartments = () => inquirer.prompt([
         })
 });
 
+//Get all employees
 const viewEmployees = () => inquirer.prompt([
 ])
 .then(response => {
@@ -142,6 +150,7 @@ const viewEmployees = () => inquirer.prompt([
     })
 });
 
+//Get all roles
 const viewRoles = () => inquirer.prompt([
 ])
 .then(response => {
@@ -154,6 +163,7 @@ const viewRoles = () => inquirer.prompt([
     })
 })
 
+//Needs work
 const updateEmployee = () => inquirer.prompt([
     {
         type: 'list',
@@ -163,6 +173,6 @@ const updateEmployee = () => inquirer.prompt([
     }
 ])
 .then(response => {
-    console.log(`Employee has been assigned this new role!`)
+    console.log(`\nEmployee has been assigned this new role!`)
     CLI()
 });

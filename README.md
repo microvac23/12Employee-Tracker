@@ -14,3 +14,16 @@ Given a command-line application that accepts user input, when I start the appli
 <br>When I choose to add a role, then I am prompted to enter the name, salary, and department for the role and that role is added to the database.
 <br>When I choose to add an employee, then I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database.
 <br>When I choose to update an employee role, then I am prompted to select an employee to update and their new role and this information is updated in the database.
+
+## Technologies Used
+
+MySQL for VSCODE: https://marketplace.visualstudio.com/items?itemName=cweijan.vscode-mysql-client2
+<br> MySql12: https://dev.mysql.com/
+<br> Inquirer: https://www.npmjs.com/package/inquirer
+
+## Examples
+
+Video Tutorial: https://drive.google.com/file/d/18AN-opv704swP75ObiqrXkVSA8dpFGS2/view
+
+Screenshot:
+![alt text](./Images/Screenshot%202023-08-30%20174326.png)
